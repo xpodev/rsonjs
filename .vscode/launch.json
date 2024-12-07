@@ -30,10 +30,18 @@
         "-r",
         "tsconfig-paths/register"
       ],
-      "args": ["${workspaceFolder}/tests/simple.test.ts"],
+      "args": ["${workspaceFolder}/tests/${input:testFile}.test.ts"],
       "cwd": "${workspaceRoot}",
       "internalConsoleOptions": "openOnSessionStart",
       "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    }
+  ],
+  "inputs": [
+    {
+      "id": "testFile",
+      "type": "promptString",
+      "description": "Enter the name of the file to run",
+      "default": "simple-json"
     }
   ]
 }
