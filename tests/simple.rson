@@ -1,0 +1,25 @@
+{
+  "name": "simple",
+  "list": [
+    1,
+    "two"(ref1),
+    {
+      "key": "value"
+    },
+    [
+      1,
+      2,
+      3,
+      $namedObject,
+      5,
+    ],
+    true,
+    false,
+    null
+  ],
+  "object": {
+    "key": "value"
+  }(namedObject),
+  "objectRef": $namedObject,
+  "objectRef2": $ref1,
+}

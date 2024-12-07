@@ -1,0 +1,18 @@
+{
+  "name": "simple",
+  "version": "1.0.0",
+  "number": 42,
+  "leadingZero": 0.42,
+  "withExponent": 4.2e2,
+  "withExponent1": 0.1e100,
+  "string": 0e1,
+  "bool": true,
+  "array": [
+    1,
+    2,
+    3
+  ],
+  "object": {
+    "key": "value"
+  }
+}

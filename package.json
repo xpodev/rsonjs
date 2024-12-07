@@ -1,0 +1,14 @@
+{
+  "name": "rsonjs",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "repository": "https://github.com/xpodev/rsonjs",
+  "author": "Xpo Development",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.2"
+  }
+}
