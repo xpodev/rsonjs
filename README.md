@@ -66,7 +66,7 @@ Here is an example of how this would work:
 We can load the `teams.rson` file with the following code:
 
 ```javascript
-require("rson-js");
+require("rsonjs");
 
 const teams = RSON.parse(fs.readFileSync("teams.rson", "utf-8"));
 
