@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import "../src/index";
+import "../src";
 
 const obj = RSON.parse(fs.readFileSync("tests/simple.rson", "utf8"));
 RSON.stringify(obj, null, 2);

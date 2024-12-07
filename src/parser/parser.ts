@@ -21,7 +21,13 @@ export class Parser {
   }
 
   public parse() {
-    this.tokenStream = new TokenStream(this.tokenizer.tokenize());
+    this.tokenStream = new TokenStream(
+      this.tokenizer.tokenize().filter((t) => {
+        return (
+          t.type !== TokenType.LineComment && t.type !== TokenType.BlockComment
+        );
+      })
+    );
     const obj = this.parseValue();
     this.eat(TokenType.EOF);
     this.lateReferences.forEach((ref) => {
@@ -102,9 +108,7 @@ export class Parser {
       if (this.tokenStream.current().type === TokenType.ObjectReference) {
         const ref = this.parseReference();
         if (ref instanceof Token) {
-          this.lateReferences.push(
-            new LateReference(obj, key, ref.value)
-          );
+          this.lateReferences.push(new LateReference(obj, key, ref.value));
         } else {
           obj[key] = ref;
         }
@@ -154,13 +158,14 @@ export class Parser {
     }
   }
 
-  private eat(tokenType: TokenType) {
+  private eat(tokenType: TokenType): Token {
     const token = this.tokenStream.current();
-    if (token.type !== tokenType) {
-      throw new RSONParseError(
-        `Unexpected token ${token.value} at position ${token.startPosition}`
-      );
+    if (token.type === tokenType) {
+      return this.tokenStream.next();
     }
-    return this.tokenStream.next();
+
+    throw new RSONParseError(
+      `Unexpected token ${token.value} at position ${token.startPosition}`
+    );
   }
 }
