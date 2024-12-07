@@ -66,7 +66,7 @@ export class Tokenizer {
           tokens.push(this.tokenizeNull());
           break;
         case char === "/":
-          tokens.push(this.tokenizeComment());
+          this.tokenizeComment();
           break;
         default:
           this.throwUnexpectedCharacter(char);
@@ -254,20 +254,16 @@ export class Tokenizer {
     return this.makeToken(TokenType.ObjectReference, name);
   }
 
-  private tokenizeComment(): Token {
+  private tokenizeComment() {
     this.next();
-    const nextChar = this.next();
+    const nextChar = this.input.peek();
     if (nextChar === "/") {
-      return this.makeToken(
-        TokenType.LineComment,
-        "//" + this.readSingleLineComment()
-      );
+      this.readSingleLineComment();
+      return;
     }
     if (nextChar === "*") {
-      return this.makeToken(
-        TokenType.BlockComment,
-        "/*" + this.readMultiLineComment()
-      );
+      this.readMultiLineComment();
+      return;
     }
     this.throwUnexpectedCharacter(nextChar);
   }
@@ -312,32 +308,31 @@ export class Tokenizer {
   }
 
   private readSingleLineComment() {
-    let value = "";
     while (!this.input.eof()) {
       const char = this.next();
       if (Characters.isLineBreak(char)) {
-        break;
+        this.nextLine();
+        return;
       }
-      value += char;
     }
-
-    return value;
   }
 
   private readMultiLineComment() {
-    let value = "";
+    this.next();
     while (!this.input.eof()) {
       const char = this.next();
+      if (Characters.isLineBreak(char)) {
+        this.nextLine();
+        continue;
+      }
       if (char === "*") {
         const nextChar = this.input.peek();
         if (nextChar === "/") {
           this.next();
-          break;
+          return;
         }
       }
-      value += char;
     }
-    return value;
   }
 
   private makeToken(type: TokenType, value: string): Token {

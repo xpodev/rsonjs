@@ -21,13 +21,7 @@ export class Parser {
   }
 
   public parse() {
-    this.tokenStream = new TokenStream(
-      this.tokenizer.tokenize().filter((t) => {
-        return (
-          t.type !== TokenType.LineComment && t.type !== TokenType.BlockComment
-        );
-      })
-    );
+    this.tokenStream = new TokenStream(this.tokenizer.tokenize());
     const obj = this.parseValue();
     this.eat(TokenType.EOF);
     this.lateReferences.forEach((ref) => {

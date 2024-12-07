@@ -13,12 +13,13 @@
       $namedObject, // This is a reference to the named object
       5,
     ],
-    true,
+    true, // This is a reference to the named object
     false,
     null
     /**
       * This is a comment
       */
+      /**/
   ],
   "object": {
     "key": "value"
@@ -26,3 +27,4 @@
   "objectRef": $namedObject,
   "objectRef2": $ref1,
 }
+//
