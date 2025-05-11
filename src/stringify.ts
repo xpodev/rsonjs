@@ -71,9 +71,10 @@ function allReferencedValues(input: any, references: References) {
 function _stringify(
   input: any,
   replacer: ReplacerFunction,
-  space: string | number,
-  references: References
-): string {
+  space: string,
+  references: References,
+  indentLevel = 1
+): string | undefined {
   const ref = references.get(input);
   if (ref) {
     if (ref.written) {
@@ -83,37 +84,60 @@ function _stringify(
     }
   }
 
-  if (typeof input === "string") {
+  const value = replacer ? replacer("", input) : input;
+
+  if (value === undefined || typeof value === "function") {
+    return undefined;
+  }
+
+  if (typeof value === "string") {
     return `"${input}"`;
   }
 
   if (
-    typeof input === "number" ||
-    typeof input === "boolean" ||
-    input === null
+    typeof value === "number" ||
+    typeof value === "boolean" ||
+    value === null
   ) {
-    return String(input);
+    return String(value);
   }
 
-  if (Array.isArray(input)) {
+  const spaceIndent = (level = 0) =>
+    space ? "\n" + space.repeat(indentLevel + level) : "";
+
+  if (Array.isArray(value)) {
     return (
-      `[${input
-        .map((value) => _stringify(value, replacer, space, references))
-        .join(",")}]` + (ref?.written ? `(${ref.name})` : "")
+      `[${
+      spaceIndent() +
+      value
+        .reduce((acc, val) => {
+        const stringifiedValue = _stringify(val, replacer, space, references, indentLevel + 1);
+        if (stringifiedValue !== undefined) {
+          acc.push(stringifiedValue);
+        }
+        return acc;
+        }, [] as string[])
+        .join("," + spaceIndent()) +
+      spaceIndent(-1)
+      }]` + (ref?.written ? `(${ref.name})` : "")
     );
   }
 
-  if (typeof input === "object") {
+  if (typeof value === "object") {
     return (
-      `{${Object.entries(input)
-        .map(([key, value]) => {
-          if (replacer) {
-            value = replacer(key, value);
-          }
-
-          return `"${key}":${_stringify(value, replacer, space, references)}`;
-        })
-        .join(",")}}` + (ref?.written ? `(${ref.name})` : "")
+      `{${
+      spaceIndent() +
+      Object.entries(value)
+        .reduce((acc, [key, val]) => {
+        const stringifiedValue = _stringify(val, replacer, space, references, indentLevel + 1);
+        if (stringifiedValue !== undefined) {
+          acc.push(`"${key}":${(space ? " " : "") + stringifiedValue}`);
+        }
+        return acc;
+        }, [] as string[])
+        .join("," + spaceIndent()) +
+      spaceIndent(-1)
+      }}` + (ref?.written ? `(${ref.name})` : "")
     );
   }
 
@@ -136,5 +160,5 @@ export function stringify(
     replacer || ((_, value) => value),
     typeof space === "number" ? " ".repeat(space) : space || "",
     references
-  );
+  ) as string;
 }
