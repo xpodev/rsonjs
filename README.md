@@ -11,6 +11,12 @@ In addition to that, RSON also allows:
 
 > These are just some niceties are not the primary goal of the RSON format.
 
+## Installation
+
+```sh
+npm install rsonjs
+```
+
 ## Usage
 
 The RSON format allows references by adding 2 types of tokens:
