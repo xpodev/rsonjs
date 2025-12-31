@@ -9,7 +9,7 @@ In addition to that, RSON also allows:
 - [x] Block comments
 - [x] Trailing commas
 
-> These are just some niceties are not the primary goal of the RSON format.
+> These are just some niceties and are not the primary goal of the RSON format.
 
 ## Installation
 
